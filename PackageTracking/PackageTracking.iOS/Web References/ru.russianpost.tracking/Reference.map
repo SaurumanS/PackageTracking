@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd5.xml" filename="rtm34_xsd5.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd2.xml" filename="rtm34_xsd2.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd4.xml" filename="rtm34_xsd4.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd3.xml" filename="rtm34_xsd3.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_wsdl.xml" filename="OperationHistory12.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd6.xml" filename="rtm34_xsd6.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://tracking.russianpost.ru/tracking-web-static/rtm34_xsd1.xml" filename="rtm34_xsd1.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>
