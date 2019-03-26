@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PackageTracking.AddNewParcel"
+             Title="Add">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="12*"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="SendTrackButton" Grid.Row="0" Text="Отправить" HorizontalOptions="End" Clicked="SendTrackButton_Clicked"/>
+            <StackLayout Grid.Row="1">
+                <Label x:Name="TrackInputLabel" Grid.Row="0" Text="Хмм...кажется поле для ввода пусто." FontSize="Medium"  TextColor="Red" IsVisible="False"/>
+                <Entry x:Name="TrackInput" Grid.Row="1" FontSize="Large" Placeholder="Введите трек-код посылки" Completed="TrackInput_Completed" TextChanged="TrackInput_TextChanged"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

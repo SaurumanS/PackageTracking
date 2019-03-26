@@ -12,12 +12,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Plugin.Connectivity;
 
 [assembly: Xamarin.Forms.Dependency(typeof(PackageTracking.Droid.GettingDataFromMailService_Android))]
 namespace PackageTracking.Droid
 {
     public class GettingDataFromMailService_Android: IReturnData
     {
+
         public RussianPostClassLibrary.ParcelDescription ParcelDescription(string barcode)
         {
             var operationHistory = RussianPostGettingData(barcode);

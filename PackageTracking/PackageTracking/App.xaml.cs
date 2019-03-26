@@ -17,7 +17,6 @@ namespace PackageTracking
 
         protected override void OnStart()
         {
-            RussianPostClassLibrary.ParcelDescription parcelDescription = DependencyService.Get<IReturnData>().ParcelDescription("RU326342425HK");
         }
 
         protected override void OnSleep()
