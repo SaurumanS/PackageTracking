@@ -4,10 +4,25 @@
              x:Class="PackageTracking.DataAboutEnteredParcels"
              Title="Data">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="12*"/>
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="1">
+                <ListView HasUnevenRows="True"  ItemsSource="{Binding Parcels}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout>
+                                    <Label Text="{Binding Barcode}" />
+                                    <!--<Label Text="{Binding Price}" />-->
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Frame>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

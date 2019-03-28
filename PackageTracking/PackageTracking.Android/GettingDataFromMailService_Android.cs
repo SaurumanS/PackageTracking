@@ -22,9 +22,21 @@ namespace PackageTracking.Droid
 
         public RussianPostClassLibrary.ParcelDescription ParcelDescription(string barcode)
         {
+            RussianPostClassLibrary.ParcelDescription parcelDescription;
             var operationHistory = RussianPostGettingData(barcode);
-            RussianPostClassLibrary.ParcelDescription parcelDescription = ReturnProcessedInfoAboutParcel(operationHistory);
+            if(operationHistory.Length == 0)
+            {
+                parcelDescription = new ParcelDescription();
+                parcelDescription.Barcode = barcode;
+                parcelDescription.ProcessStatus = false;
+                return parcelDescription;
+            }
+            parcelDescription = ReturnProcessedInfoAboutParcel(operationHistory);
             parcelDescription.Barcode = barcode;
+            parcelDescription.ProcessStatus = true;
+            if (parcelDescription.OperationsInfo.Last().NameOperationCode == '8' && parcelDescription.OperationsInfo.Last().NameOperationAttributeCode == '2') parcelDescription.StatusParcel = "Доставлено";//Если посылка доставлена в почтовое отделение
+            else if (parcelDescription.OperationsInfo.Last().NameOperationCode == '2') parcelDescription.StatusParcel = "Вручено";//Если посылка вручена адресату
+            else parcelDescription.StatusParcel = "В пути";
             return parcelDescription;
         }
         ru.russianpost.tracking.OperationHistoryRecord[] RussianPostGettingData(string barcode)//Получение данных от Почты России
@@ -41,7 +53,7 @@ namespace PackageTracking.Droid
                 PackageTracking.Droid.ru.russianpost.tracking.OperationHistoryRecord[] response = transmission.getOperationHistory(request, client);//Получение ответа
                 return response;
             }
-            catch (Exception exeption) { Console.WriteLine(exeption.Message); }
+            catch (Exception) { }
             return null;
         }
 

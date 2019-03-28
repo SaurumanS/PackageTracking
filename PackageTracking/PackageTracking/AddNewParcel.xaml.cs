@@ -1,6 +1,7 @@
 ﻿using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -19,10 +20,13 @@ namespace PackageTracking
         public AddNewParcel()
         {
             InitializeComponent();
+            ParcelDescriptionsBinding = new ObservableCollection<RussianPostClassLibrary.ParcelDescription>();
+            
             TrackInput.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
+            this.BindingContext = this;
         }
+        public ObservableCollection<RussianPostClassLibrary.ParcelDescription> ParcelDescriptionsBinding { get; set; }//Коллекция для привязки к ListView
 
-        
 
         private void TrackInput_TextChanged(object sender, TextChangedEventArgs e)//Событие на ввод текста в поле (проверка на корректность ввода)
         {
@@ -72,20 +76,31 @@ namespace PackageTracking
         {
             GettingData();
         }
-        private async void GettingData()
+        private async void GettingData()//Получение данных от веб-сервиса и передача их другой странице
         {
-            bool isOnline = CrossConnectivity.Current.IsConnected;
+            bool isOnline = CrossConnectivity.Current.IsConnected;//Проверка на подключение к сети
             if (isOnline && CheckOnCorrectSpelling())
             {
                 string[] tracks = TrackInput.Text.ToUpper().Split('|', '+');
-                var parcelsDescriptions = await Task.WhenAll(tracks.Select(x => ReturnDataAboutOneParcel(x)));
+                RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions = await Task.WhenAll(tracks.Select(x => ReturnDataAboutOneParcel(x)));
+                foreach(var item in parcelsDescriptions)
+                {
+                    ParcelDescriptionsBinding.Add(item);
+                }
+                TransfetData(parcelsDescriptions);
             }
             else
             {
                 await DisplayAlert("Ошибка сети", "Проверьте подключение к сети", "OK");
             }
         }
-        private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)
+        private async void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные на другую страницу
+        {
+            DataAboutEnteredParcels dataAboutEnteredParcels = new DataAboutEnteredParcels();
+            await Navigation.PushAsync(dataAboutEnteredParcels);
+            dataAboutEnteredParcels.AddNewParcels(parcelsDescriptions);
+        }
+        private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)//Асинхронный метод для заполнения массива из GettingData()
         {
             return Task.Factory.StartNew(() =>
             {

@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PackageTracking.AddNewParcel"
+             xmlns:local="clr-namespace:PackageTracking"
+             x:Class ="PackageTracking.AddNewParcel"
              Title="Add">
     <ContentPage.Content>
         <Grid>
@@ -15,6 +16,30 @@
                 <Label x:Name="TrackInputLabel" Grid.Row="0" Text="Хмм...кажется поле для ввода пусто." FontSize="Medium"  TextColor="Red" IsVisible="False"/>
                 <Entry x:Name="TrackInput" Grid.Row="1" FontSize="Large" Placeholder="Введите трек-код посылки" Completed="TrackInput_Completed" TextChanged="TrackInput_TextChanged"/>
             </StackLayout>
+            <Frame BorderColor="Black" Grid.Row="2">
+                <StackLayout Orientation="Horizontal" Grid.Row="2">
+                    <ListView HasUnevenRows="True" ItemsSource="{Binding ParcelDescriptionsBinding}" SeparatorColor="Red">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <local:CustomViewCell SelectedBackgroundColor="#96BCE3">
+                                    <ViewCell.View>
+                                        <StackLayout>
+                                            <Label Text="{Binding Barcode}" FontSize="Large" TextColor="Black"/>
+                                            <Label Text="{Binding ProcessStatusString}" TextColor="{Binding ColorOfText}"/>
+                                        </StackLayout>
+                                    </ViewCell.View>
+                                </local:CustomViewCell>
+                                <!--<TextCell
+                        Text="{Binding Barcode}"
+                        Detail="{Binding ProcessStatusString}"
+                        TextColor="Black"
+                        DetailColor="{Binding ColorOfText}"
+                        />-->
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </Frame>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
