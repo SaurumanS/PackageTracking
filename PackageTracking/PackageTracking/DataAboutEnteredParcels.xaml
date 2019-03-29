@@ -10,7 +10,7 @@
                 <RowDefinition Height="12*"/>
             </Grid.RowDefinitions>
             <Frame Grid.Row="1">
-                <ListView HasUnevenRows="True"  ItemsSource="{Binding Parcels}">
+                <ListView HasUnevenRows="True" GroupDisplayBinding="{Binding CurrentlyStatusParcel}"  ItemsSource="{Binding Parcels}" IsGroupingEnabled="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
