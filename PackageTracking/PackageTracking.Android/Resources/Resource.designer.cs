@@ -750,7 +750,13 @@ namespace PackageTracking.Droid
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.abc_textfield_search_material = global::PackageTracking.Droid.Resource.Drawable.abc_textfield_search_material;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.abc_vector_test = global::PackageTracking.Droid.Resource.Drawable.abc_vector_test;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password = global::PackageTracking.Droid.Resource.Drawable.avd_hide_password;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_1 = global::PackageTracking.Droid.Resource.Drawable.avd_hide_password_1;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_2 = global::PackageTracking.Droid.Resource.Drawable.avd_hide_password_2;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_3 = global::PackageTracking.Droid.Resource.Drawable.avd_hide_password_3;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password = global::PackageTracking.Droid.Resource.Drawable.avd_show_password;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_1 = global::PackageTracking.Droid.Resource.Drawable.avd_show_password_1;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_2 = global::PackageTracking.Droid.Resource.Drawable.avd_show_password_2;
+			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_3 = global::PackageTracking.Droid.Resource.Drawable.avd_show_password_3;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_bottom_navigation_item_background = global::PackageTracking.Droid.Resource.Drawable.design_bottom_navigation_item_background;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_fab_background = global::PackageTracking.Droid.Resource.Drawable.design_fab_background;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_ic_visibility = global::PackageTracking.Droid.Resource.Drawable.design_ic_visibility;
@@ -4339,8 +4345,26 @@ namespace PackageTracking.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
+			// aapt resource value: 0x7f02012f
+			public const int avd_hide_password_1 = 2130837807;
+			
+			// aapt resource value: 0x7f020130
+			public const int avd_hide_password_2 = 2130837808;
+			
+			// aapt resource value: 0x7f020131
+			public const int avd_hide_password_3 = 2130837809;
+			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
+			
+			// aapt resource value: 0x7f020132
+			public const int avd_show_password_1 = 2130837810;
+			
+			// aapt resource value: 0x7f020133
+			public const int avd_show_password_2 = 2130837811;
+			
+			// aapt resource value: 0x7f020134
+			public const int avd_show_password_3 = 2130837812;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;

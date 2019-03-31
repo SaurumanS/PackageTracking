@@ -16,12 +16,11 @@ namespace PackageTracking
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddNewParcel : ContentPage
     {
-        string checkEntry = null;
+        bool checkOnSameSymbol = false;//Изменяется, когда был произведён ввод символа или вставка строки (чтобы обработчик не выполнялся дважды)
         public AddNewParcel()
         {
             InitializeComponent();
             ParcelDescriptionsBinding = new ObservableCollection<RussianPostClassLibrary.ParcelDescription>();
-            
             TrackInput.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
             this.BindingContext = this;
         }
@@ -30,60 +29,91 @@ namespace PackageTracking
 
         private void TrackInput_TextChanged(object sender, TextChangedEventArgs e)//Событие на ввод текста в поле (проверка на корректность ввода)
         {
-            if (checkEntry == e.NewTextValue) return;
-            checkEntry = e.OldTextValue;
-            if (string.IsNullOrEmpty(e.NewTextValue)) return;
-            if (e.NewTextValue.Length > 130)
-            {
-                ((Entry)sender).Text = e.OldTextValue;
-                TrackInputLabel.IsVisible = true;
-                TrackInputLabel.Text = "Поле ввода не должно содержать больше 130 символов";
-            }
-            else if (!IsDigitsOnly(e.NewTextValue.Last().ToString()) && !IsLettersOnly(e.NewTextValue.Last().ToString()) && e.NewTextValue.Last() != '+' && e.NewTextValue.Last() != '|')
-            {
-                ((Entry)sender).Text = e.OldTextValue;
-                TrackInputLabel.IsVisible = true;
-                TrackInputLabel.Text = "Данный символ запрещен для ввода";
-            }
+            if (checkOnSameSymbol) checkOnSameSymbol = false;
             else TrackInputLabel.IsVisible = false;
-        }
-        bool IsDigitsOnly(string str)//Проверяет содержит ли строка только цифры
-        {
-            foreach (char c in str)
+            string oldTextValue;
+            string newTextValue;
+            if (string.IsNullOrEmpty(e.OldTextValue)) oldTextValue = "";
+            else oldTextValue = e.OldTextValue.ToUpper();
+            if (string.IsNullOrEmpty(e.NewTextValue)) newTextValue = "";
+            else newTextValue = e.NewTextValue.ToUpper();
+            
+            if (newTextValue.Length - oldTextValue.Length > 1)//Если была произведена вставка
             {
-                if (c < '0' || c > '9')
-                    return false;
+                try
+                {
+                    RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(newTextValue, true, true);
+                    ((Entry)sender).Text = newTextValue;
+                }
+                catch (ArgumentException exeption)
+                {
+                    TrackInputLabel.IsVisible = true;
+                    ((Entry)sender).Text = exeption.ParamName;
+                    int index = exeption.Message.IndexOf("P");
+                    TrackInputLabel.Text = exeption.Message.Remove(index-1);
+                    checkOnSameSymbol = true;
+                }
             }
-
-            return true;
-        }
-        bool IsLettersOnly(string str)//Проверяет содержит ли строка только буквы
-        {
-            foreach (char c in str)
+            else if (newTextValue.Last() == oldTextValue.Last())
             {
-                if (c < 'A' || c > 'Z')
-                    return false;
+                try
+                {
+                    RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(newTextValue, true, true);
+                    ((Entry)sender).Text = newTextValue;
+                }
+                catch (ArgumentException exeption)
+                {
+                    TrackInputLabel.IsVisible = true;
+                    ((Entry)sender).Text = oldTextValue;
+                    int index = exeption.Message.IndexOf("P");
+                    TrackInputLabel.Text = exeption.Message.Remove(index - 1);
+                    checkOnSameSymbol = true;
+                }
             }
-
-            return true;
+            else if (newTextValue.Length - oldTextValue.Length == 1)//Если введён один символ
+            {
+                try
+                {
+                    RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(newTextValue, false, false);
+                    ((Entry)sender).Text = newTextValue;
+                }
+                catch (ArgumentException exeption)
+                {
+                    TrackInputLabel.IsVisible = true;
+                    ((Entry)sender).Text = exeption.ParamName;
+                    int index = exeption.Message.IndexOf("P");
+                    if(index!=-1)TrackInputLabel.Text = exeption.Message.Remove(index - 1);
+                    else TrackInputLabel.Text = exeption.Message;
+                    checkOnSameSymbol = true;
+                }
+            }
         }
         private void TrackInput_Completed(object sender, EventArgs e)
         {
             SendTrackButton_Clicked(sender, e);
         }
 
-        private void SendTrackButton_Clicked(object sender, EventArgs e)
+        private void SendTrackButton_Clicked(object sender, EventArgs e)//Отправка трек-кода(ов) 
         {
-            GettingData();
+            try
+            {
+                RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(TrackInput.Text, true, false);
+                GettingData();
+            }
+            catch (ArgumentException exeption)
+            {
+                DisplayAlert("Странные дела", exeption.Message, "Ой, ошибочка вышла");
+            }
+
         }
         private async void GettingData()//Получение данных от веб-сервиса и передача их другой странице
         {
             bool isOnline = CrossConnectivity.Current.IsConnected;//Проверка на подключение к сети
-            if (isOnline && CheckOnCorrectSpelling())
+            if (isOnline)
             {
                 string[] tracks = TrackInput.Text.ToUpper().Split('|', '+');
                 RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions = await Task.WhenAll(tracks.Select(x => ReturnDataAboutOneParcel(x)));
-                foreach(var item in parcelsDescriptions)
+                foreach (var item in parcelsDescriptions)
                 {
                     ParcelDescriptionsBinding.Add(item);
                 }
@@ -107,44 +137,6 @@ namespace PackageTracking
                 var result = DependencyService.Get<IReturnData>().ParcelDescription(barcode);
                 return result;
             });
-        }
-        private bool CheckOnCorrectSpelling()
-        {
-            if (string.IsNullOrEmpty(TrackInput.Text))
-            {
-                TrackInputLabel.IsVisible = true;
-                TrackInputLabel.Text = "Хмм...кажется поле для ввода пусто.";
-                return false;
-            }
-            else
-            {
-                try
-                {
-                    string[] tracks = TrackInput.Text.ToUpper().Split('|', '+');
-                    for (int index = 0; index < tracks.Length; index++)
-                    {
-                        if (tracks[index].First() >= 'A' && tracks[index].First() <= 'Z')
-                        {
-                            if (tracks[index].Length != 13) throw new ArgumentException("Длина трек-кода (" + tracks[index] + ") неверная");
-                            string temp = tracks[index];
-                            temp = temp.TrimStart('C', 'E', 'L', 'R', 'S', 'V', 'Z');
-                            if (temp.Length == tracks[index].Length) throw new ArgumentException("Данный трек-код (" + tracks[index] + ") не отслеживается смотри пример");
-                            bool check = true;
-                            for (int counter = 1; counter < tracks[index].Length; counter++)
-                            {
-                                if (counter == 1 || counter == 11 || counter == 12) check = IsLettersOnly(tracks[index][counter].ToString());
-                                else check = IsDigitsOnly(tracks[index][counter].ToString());
-                                if (!check) throw new ArgumentException("Ошибка ввода трек-кода (" + tracks[index] + "), смотри пример трек-кода");
-                            }
-                        }
-                    }
-                    return true;
-                }
-                catch (ArgumentException exeption) { DisplayAlert("Ошибка ввода", exeption.Message, "OK"); }
-                return false;
-            }
-
-
         }
     }
 }

@@ -51,10 +51,10 @@ namespace PackageTracking.Droid
             {
                 PackageTracking.Droid.ru.russianpost.tracking.OperationHistory12 transmission = new PackageTracking.Droid.ru.russianpost.tracking.OperationHistory12();
                 PackageTracking.Droid.ru.russianpost.tracking.OperationHistoryRecord[] response = transmission.getOperationHistory(request, client);//Получение ответа
-                return response;
+                if(response != null) return response;
             }
             catch (Exception) { }
-            return null;
+            return new ru.russianpost.tracking.OperationHistoryRecord[0];
         }
 
         RussianPostClassLibrary.ParcelDescription ReturnProcessedInfoAboutParcel(ru.russianpost.tracking.OperationHistoryRecord[] operationHistoryRecords)
