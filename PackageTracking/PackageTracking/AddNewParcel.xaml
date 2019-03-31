@@ -4,14 +4,26 @@
              xmlns:local="clr-namespace:PackageTracking"
              x:Class ="PackageTracking.AddNewParcel"
              Title="Add">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="BackgroundColor" Value="WhiteSmoke" />
+            <Setter Property="CornerRadius" Value="50"/>
+        </Style>
+    </ContentPage.Resources>
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Spacing="150">
+            <Button x:Name="RulesForInput" Text="Как вводить?"  Clicked="RulesForInput_Clicked" />
+            <Button x:Name="SendTrackButton" Text="Отправить" VerticalOptions="End"  Clicked="SendTrackButton_Clicked"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
     <ContentPage.Content>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="12*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="SendTrackButton" Grid.Row="0" Text="Отправить" HorizontalOptions="End" Clicked="SendTrackButton_Clicked"/>
             <StackLayout Grid.Row="1">
                 <Label x:Name="TrackInputLabel" Grid.Row="0" Text="Хмм...кажется поле для ввода пусто." FontSize="Medium"  TextColor="Red" IsVisible="False"/>
                 <Entry x:Name="TrackInput" Grid.Row="1" FontSize="Large" Placeholder="Введите трек-код посылки" Completed="TrackInput_Completed" TextChanged="TrackInput_TextChanged"/>

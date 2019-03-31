@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using Realms;
 
 namespace RussianPostClassLibrary
 {
-    public class ParcelDescription
+    public class ParcelDescription: RealmObject
     {
         string barcode;//Трек-код
         string mass = "Не указано";//Масса посылки
@@ -49,12 +50,12 @@ namespace RussianPostClassLibrary
                 if (value)
                 {
                     ProcessStatusString = "Данные получены";
-                    ColorOfText = Color.Green;
+                    ColorOfText = "Green";
                 }
                 else
                 {
                     ProcessStatusString = "Ошибка: данные отсутствуют (проверьте трек-код)";
-                    ColorOfText = Color.Red;
+                    ColorOfText = "Red";
                 }
             }
         }
@@ -63,7 +64,7 @@ namespace RussianPostClassLibrary
             get { return processStatusString; }
             set { processStatusString = value; }
         }
-        public Color ColorOfText//Цвет текста в окне отправки (получены ли данные)
+        public string ColorOfText//Цвет текста в окне отправки (получены ли данные)
         {
             get; set;
         }

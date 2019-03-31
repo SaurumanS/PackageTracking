@@ -7,10 +7,16 @@
             android:TabbedPage.BarItemColor="Black"
             android:TabbedPage.BarSelectedItemColor="Red"
              x:Class="PackageTracking.MainPage">
-
-    <TabbedPage.Children>
-        <local:DataAboutEnteredParcels/>
-        <local:AddNewParcel/>
-    </TabbedPage.Children>
+    <NavigationPage Title="Посылки" >
+        <x:Arguments>
+            <local:DataAboutEnteredParcels/>
+        </x:Arguments>
+    </NavigationPage>
+    <NavigationPage Title="Добавление" >
+        <x:Arguments>
+            <local:AddNewParcel/>
+        </x:Arguments>
+    </NavigationPage>
+    
 
 </TabbedPage>

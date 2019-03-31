@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Realms;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,10 +18,12 @@ namespace PackageTracking
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddNewParcel : ContentPage
     {
+        Realm dataBase;
         bool checkOnSameSymbol = false;//Изменяется, когда был произведён ввод символа или вставка строки (чтобы обработчик не выполнялся дважды)
         public AddNewParcel()
         {
             InitializeComponent();
+            dataBase = Realm.GetInstance();
             ParcelDescriptionsBinding = new ObservableCollection<RussianPostClassLibrary.ParcelDescription>();
             TrackInput.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
             this.BindingContext = this;
@@ -54,7 +58,7 @@ namespace PackageTracking
                     checkOnSameSymbol = true;
                 }
             }
-            else if (newTextValue.Last() == oldTextValue.Last())
+            else if ((!string.IsNullOrEmpty(oldTextValue) && !string.IsNullOrEmpty(newTextValue) && newTextValue.Last() == oldTextValue.Last()))
             {
                 try
                 {
@@ -106,7 +110,7 @@ namespace PackageTracking
             }
 
         }
-        private async void GettingData()//Получение данных от веб-сервиса и передача их другой странице
+        private async void GettingData()//Получение данных от веб-сервиса
         {
             bool isOnline = CrossConnectivity.Current.IsConnected;//Проверка на подключение к сети
             if (isOnline)
@@ -124,11 +128,9 @@ namespace PackageTracking
                 await DisplayAlert("Ошибка сети", "Проверьте подключение к сети", "OK");
             }
         }
-        private async void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные на другую страницу
+        private async void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
         {
-            DataAboutEnteredParcels dataAboutEnteredParcels = new DataAboutEnteredParcels();
-            await Navigation.PushAsync(dataAboutEnteredParcels);
-            dataAboutEnteredParcels.AddNewParcels(parcelsDescriptions);
+            
         }
         private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)//Асинхронный метод для заполнения массива из GettingData()
         {
@@ -137,6 +139,12 @@ namespace PackageTracking
                 var result = DependencyService.Get<IReturnData>().ParcelDescription(barcode);
                 return result;
             });
+        }
+
+        private void RulesForInput_Clicked(object sender, EventArgs e)//Вывод правил ввода для трек-кодов
+        {
+            string rules = "Идентификатор отправлений по России состоит из 14 цифр. Международные отправления имеют идентификатор из 13 символов, где есть буквы:XY123456789YX. Отслеживать можно только те, которые начинаются с букв C,E,L,R,S,V,Z. Имеется возможность ввода нескольких трек-номеров с помощью разделителей (| +). Пример: RU123456789UR+CU123456789UC ";
+            DisplayAlert("Правила", rules, "Понятно");
         }
     }
 }
