@@ -128,8 +128,15 @@ namespace PackageTracking
                 await DisplayAlert("Ошибка сети", "Проверьте подключение к сети", "OK");
             }
         }
-        private async void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
+        private void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
         {
+            dataBase.Write(() =>
+            {
+                foreach(var item in parcelsDescriptions)
+                {
+                    dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = item });
+                }
+            });
             
         }
         private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)//Асинхронный метод для заполнения массива из GettingData()

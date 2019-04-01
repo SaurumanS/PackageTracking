@@ -9,13 +9,14 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="12*"/>
             </Grid.RowDefinitions>
+            <Label Grid.Row="0" x:Name="Data"/>
             <Frame Grid.Row="1">
-                <ListView HasUnevenRows="True" GroupDisplayBinding="{Binding CurrentlyStatusParcel}"  ItemsSource="{Binding Parcels}" IsGroupingEnabled="True">
+                <ListView x:Name="DataList" HasUnevenRows="True" ItemsSource="{Binding Parcels}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <Label Text="{Binding Barcode}" />
+                                    <Label Text="{Binding Id}" />
                                     <!--<Label Text="{Binding Price}" />-->
                                 </StackLayout>
                             </ViewCell>
