@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PackageTracking"
+             x:Class="PackageTracking.AdditionalInformationAboutParcel">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="0" Padding="20" HasShadow="False" HorizontalOptions="FillAndExpand" CornerRadius="5" OutlineColor="#890DC6" BackgroundColor="White">
+                <ScrollView>
+                    <ListView x:Name="ListDataAboutParcel" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <local:CustomViewCell SelectedBackgroundColor="#96bce3">
+                                    <StackLayout>
+                                        <Label Text="{Binding NameOperation}" FontSize="Large"/>
+                                        <Label Text="{Binding NameOperationAttribute}" FontSize="Large" />
+                                        <Label Text="{Binding DataOperationString}" FontSize="Medium"/>
+                                        <Label Text="{Binding IndexOperation}" FontSize="Medium"/>
+                                    </StackLayout>
+                                </local:CustomViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </ScrollView>
+            </Frame>
+            <ScrollView Grid.Row="1">
+                <StackLayout  Orientation="Vertical">
+                    <Label x:Name="Recipient"/>
+                    <Label x:Name="Sender"/>
+                    <Label x:Name="Mass"/>
+                    <Label x:Name="TypeParcel"/>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

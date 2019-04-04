@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AdditionalInformationAboutParcel.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="AddNewParcel.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -1,25 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PackageTracking"
              x:Class="PackageTracking.DataAboutEnteredParcels"
              Title="Data">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Spacing="70">
+            <Label Text="Ваши посылки" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" TextColor="White" FontSize="Large"/>
+            <Button x:Name="DeleteOneTrack" Text="Как вводить?" HorizontalOptions="EndAndExpand"  />
+        </StackLayout>
+    </NavigationPage.TitleView>
     <ContentPage.Content>
-        <Grid>
+        <Grid BackgroundColor="#6ac6f7">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="12*"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" x:Name="Data"/>
-            <Frame Grid.Row="1">
-                <ListView x:Name="DataList" HasUnevenRows="True" ItemsSource="{Binding Parcels}" >
+            <Frame Grid.Row="0" Padding="20" HasShadow="False" HorizontalOptions="FillAndExpand" CornerRadius="5" OutlineColor="#890DC6" BackgroundColor="White">
+                <ListView x:Name="DataList" HasUnevenRows="True" ItemsSource="{Binding Parcels}" ItemTapped="DataList_ItemSelected" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
+                            <local:CustomViewCell SelectedBackgroundColor="#96BCE3">
                                 <StackLayout>
-                                    <Label Text="{Binding Id}" />
-                                    <!--<Label Text="{Binding Price}" />-->
+                                    <Label Text="{Binding Id}" FontSize="Large" />
+                                    <Label Text="{Binding Status}" FontSize="Medium" TextColor="Red"/>
                                 </StackLayout>
-                            </ViewCell>
+                            </local:CustomViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

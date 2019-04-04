@@ -30,7 +30,7 @@
             </StackLayout>
             <Frame BorderColor="Black" Grid.Row="2">
                 <StackLayout Orientation="Horizontal" Grid.Row="2">
-                    <ListView HasUnevenRows="True" ItemsSource="{Binding ParcelDescriptionsBinding}" SeparatorColor="Red">
+                    <ListView x:Name="ListAddCorrect" HasUnevenRows="True" ItemsSource="{Binding ParcelDescriptionsBinding}" SeparatorColor="Red">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <local:CustomViewCell SelectedBackgroundColor="#96BCE3">

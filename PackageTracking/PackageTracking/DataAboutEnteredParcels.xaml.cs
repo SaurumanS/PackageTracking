@@ -19,15 +19,21 @@ namespace PackageTracking
         public DataAboutEnteredParcels ()
 		{
 			InitializeComponent ();
-            realm = Realm.GetInstance();
-            transaction = realm.BeginWrite();
-            realm.RemoveAll();
-            transaction.Commit();
-            //var oldDogs = realm.All<DataBaseModel>();
-            //foreach (var item in oldDogs)
-            //{
-            //    int a = 1 + 5;
-            //}
+            try
+            {
+                realm = Realm.GetInstance();
+            }
+            catch (Exception)
+            {
+                var config = RealmConfiguration.DefaultConfiguration;
+                config.SchemaVersion=2;  // increment this when your model changes
+                realm = Realm.GetInstance();
+            }
+            //transaction = realm.BeginWrite();
+            //realm.RemoveAll();
+            //transaction.Commit();
+            var oldDogs = realm.All<DataBaseModel>();
+            
         }
 
         protected override void OnAppearing()
@@ -35,13 +41,14 @@ namespace PackageTracking
             DataList.ItemsSource = realm.All<DataBaseModel>();
             base.OnAppearing();
         }
-        //public void AddNewParcels(RussianPostClassLibrary.ParcelDescription[] descriptions)
-        //{
-        //    var groups = descriptions.Where(x=> x.ProcessStatus==true).GroupBy(x => x.StatusParcel).Select(g => new GroupingParcels<string, RussianPostClassLibrary.ParcelDescription>(g.Key, g));
-        //    foreach(var item in groups)
-        //    {
-        //        Parcels.Add(new GroupingParcels<string, RussianPostClassLibrary.ParcelDescription>(item.CurrentlyStatusParcel,item));
-        //    }
-        //}
+
+        private async void DataList_ItemSelected(object sender, SelectedItemChangedEventArgs e)//Обработчик нажатия на трек-код (получение доп.информации)
+        {
+            ListView listView = (ListView)sender;
+            DataBaseModel dataBaseModel = (DataBaseModel)listView.SelectedItem;
+            RussianPostClassLibrary.ParcelDescription parcelDescription = dataBaseModel.ParcelDescription;
+            await Navigation.PushAsync(new AdditionalInformationAboutParcel(parcelDescription));
+            ((ListView)sender).SelectedItem = null;
+        }
     }
 }

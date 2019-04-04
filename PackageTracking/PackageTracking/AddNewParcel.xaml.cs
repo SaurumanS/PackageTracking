@@ -102,6 +102,7 @@ namespace PackageTracking
             try
             {
                 RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(TrackInput.Text, true, false);
+                ParcelDescriptionsBinding.Clear();//Очищаем коллекцию трек-кодов и ListView соответсвенно
                 GettingData();
             }
             catch (ArgumentException exeption)
@@ -116,17 +117,33 @@ namespace PackageTracking
             if (isOnline)
             {
                 string[] tracks = TrackInput.Text.ToUpper().Split('|', '+');
-                RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions = await Task.WhenAll(tracks.Select(x => ReturnDataAboutOneParcel(x)));
-                foreach (var item in parcelsDescriptions)
+                if (CheckOnDuplicationTrackCodeInDataBase(tracks))
                 {
-                    ParcelDescriptionsBinding.Add(item);
+                    RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions = await Task.WhenAll(tracks.Select(x => ReturnDataAboutOneParcel(x)));
+                    foreach (var item in parcelsDescriptions)
+                    {
+                        ParcelDescriptionsBinding.Add(item);
+                    }
+                    TransfetData(parcelsDescriptions);
                 }
-                TransfetData(parcelsDescriptions);
             }
             else
             {
                 await DisplayAlert("Ошибка сети", "Проверьте подключение к сети", "OK");
             }
+        }
+        private bool CheckOnDuplicationTrackCodeInDataBase(string[] tracks)//Проверка на попытку повторно занести трек-код в базу данных
+        {
+            bool result = true;
+            foreach(var track in tracks)
+            {
+                if (dataBase.Find<DataBaseModel>(track) != null)
+                {
+                    DisplayAlert("Дублирование", $"Посылка под номером: {track}, уже внесена в базу", "OK");
+                    result = false;
+                }
+            }
+            return result;
         }
         private void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
         {
@@ -134,14 +151,20 @@ namespace PackageTracking
             {
                 foreach(var item in parcelsDescriptions)
                 {
-                    dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = item });
+                    if (item.ProcessStatus)
+                    {
+                            var operations = dataBase.Add(item);
+                            operations.SenderInfo = dataBase.Add(item.SenderInfo);
+                            operations.RecipientInfo = dataBase.Add(item.RecipientInfo);
+                            var a = dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = operations });
+                    }
                 }
             });
             
         }
         private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)//Асинхронный метод для заполнения массива из GettingData()
         {
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 var result = DependencyService.Get<IReturnData>().ParcelDescription(barcode);
                 return result;
