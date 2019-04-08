@@ -147,16 +147,17 @@ namespace PackageTracking
         }
         private void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
         {
+            
             dataBase.Write(() =>
             {
                 foreach(var item in parcelsDescriptions)
                 {
                     if (item.ProcessStatus)
                     {
-                            var operations = dataBase.Add(item);
-                            operations.SenderInfo = dataBase.Add(item.SenderInfo);
-                            operations.RecipientInfo = dataBase.Add(item.RecipientInfo);
-                            var a = dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = operations });
+                        var operations = dataBase.Add(item);
+                        operations.SenderInfo = dataBase.Add(item.SenderInfo);
+                        operations.RecipientInfo = dataBase.Add(item.RecipientInfo);
+                        var a = dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = operations, StatusParcelColor = item.StatusParcelColor });
                     }
                 }
             });

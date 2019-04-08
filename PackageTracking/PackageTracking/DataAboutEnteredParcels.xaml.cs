@@ -26,7 +26,7 @@ namespace PackageTracking
             catch (Exception)
             {
                 var config = RealmConfiguration.DefaultConfiguration;
-                config.SchemaVersion=2;  // increment this when your model changes
+                config.SchemaVersion=3;  // increment this when your model changes
                 realm = Realm.GetInstance();
             }
             //transaction = realm.BeginWrite();

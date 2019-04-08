@@ -16,13 +16,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Frame Grid.Row="0" Padding="20" HasShadow="False" HorizontalOptions="FillAndExpand" CornerRadius="5" OutlineColor="#890DC6" BackgroundColor="White">
-                <ListView x:Name="DataList" HasUnevenRows="True" ItemsSource="{Binding Parcels}" ItemTapped="DataList_ItemSelected" >
+                <ListView x:Name="DataList" HasUnevenRows="True" SeparatorColor="#635ce8"  ItemTapped="DataList_ItemSelected" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <local:CustomViewCell SelectedBackgroundColor="#96BCE3">
                                 <StackLayout>
                                     <Label Text="{Binding Id}" FontSize="Large" />
-                                    <Label Text="{Binding Status}" FontSize="Medium" TextColor="Red"/>
+                                    <Label Text="{Binding Status}" FontSize="Medium" TextColor="{Binding StatusParcelColor}"/>
                                 </StackLayout>
                             </local:CustomViewCell>
                         </DataTemplate>

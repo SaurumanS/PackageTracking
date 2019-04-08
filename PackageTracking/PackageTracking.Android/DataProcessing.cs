@@ -33,9 +33,16 @@ namespace PackageTracking.Droid
             parcelDescription.ProcessStatus = true;
             parcelDescription.ProcessStatusString = "Данные получены";
             parcelDescription.ColorOfText = "Green";
-            if (parcelDescription.OperationsInfos.Last().NameOperationCode == '8' && parcelDescription.OperationsInfos.Last().NameOperationAttributeCode == '2') parcelDescription.StatusParcel = "Доставлено";//Если посылка доставлена в почтовое отделение
-            else if (parcelDescription.OperationsInfos.Last().NameOperationCode == '2') parcelDescription.StatusParcel = "Вручено";//Если посылка вручена адресату
-            else parcelDescription.StatusParcel = "В пути";
+            var nameOperationCode = parcelDescription.OperationsInfos.Last().NameOperationCode;
+            var nameOperationAttributeCode = parcelDescription.OperationsInfos.Last().NameOperationAttributeCode;
+            parcelDescription.StatusParcelColor = "Green";
+            if (nameOperationCode == 8 && nameOperationAttributeCode == 2) parcelDescription.StatusParcel = "Доставлено";//Если посылка доставлена в почтовое отделение
+            else if (nameOperationCode == 2) parcelDescription.StatusParcel = "Вручено";//Если посылка вручена адресату
+            else
+            {
+                parcelDescription.StatusParcel = "В пути";
+                parcelDescription.StatusParcelColor = "Red";
+            }
             return parcelDescription;
         }
 
@@ -126,7 +133,11 @@ namespace PackageTracking.Droid
                 }
                 operations[index].DataOperationString = operations[index].DataOperation.ToLocalTime().ToString();
                 if (!string.IsNullOrEmpty(operations[index].IndexOperation)) operations[index].IndexOperation += ", " + operations[index].AddressOperation + ": " + operations[index].CountryOperation;
-                else operations[index].IndexOperation = operations[index].AddressOperation + ": " + operations[index].CountryOperation;
+                else
+                {
+                    if (!string.IsNullOrEmpty(operations[index].AddressOperation)) operations[index].IndexOperation += operations[index].AddressOperation;
+                    if(!string.IsNullOrEmpty(operations[index].CountryOperation)) operations[index].IndexOperation +=  ": " + operations[index].CountryOperation;
+                }
             }
             foreach (var item in operations)
             {

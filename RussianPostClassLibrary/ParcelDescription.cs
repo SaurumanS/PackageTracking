@@ -18,5 +18,8 @@ namespace RussianPostClassLibrary
         public string ProcessStatusString { get; set; }
         public string ColorOfText { get; set; }//Цвет текста в окне отправки (получены ли данные)
         public string StatusParcel { get; set; }//Показывает статус посылки (доставлена, в пути, вручена адресату)
+        
+        public string StatusParcelColor { get; set; }
+        
     }
 }

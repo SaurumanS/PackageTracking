@@ -12,6 +12,9 @@ namespace PackageTracking
         [PrimaryKey]
         public string Id { get; set; }
         public string Status { get; set; }
+        
+        public string StatusParcelColor { get; set; }
+        
         public RussianPostClassLibrary.ParcelDescription ParcelDescription { get; set; }
     }
 }

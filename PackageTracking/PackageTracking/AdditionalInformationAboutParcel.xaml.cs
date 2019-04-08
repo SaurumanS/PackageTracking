@@ -23,6 +23,11 @@ namespace PackageTracking
             Mass.Text = parcelDescription.Mass;
             TypeParcel.Text = parcelDescription.OperationsInfos.Last().ComplexItemName;
             ListDataAboutParcel.ItemsSource = parcelDescription.OperationsInfos.Select(x=>x).ToArray().Reverse();
+            DateTimeOffset dateTimeNow = DateTimeOffset.Now;
+            TimeSpan difference;
+            if(parcelDescription.StatusParcel=="В пути") difference = dateTimeNow.Subtract(parcelDescription.OperationsInfos.First().DataOperation);
+            else difference = parcelDescription.OperationsInfos.Last().DataOperation.Subtract(parcelDescription.OperationsInfos.First().DataOperation);
+            TimeHasPassedLabel.Text = $"В пути  {difference.Days} дней, {difference.Hours} часов, {difference.Minutes} минут.";
             this.BindingContext = this;
         }
         protected override void OnDisappearing()
