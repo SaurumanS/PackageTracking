@@ -11,9 +11,12 @@
         </Style>
     </ContentPage.Resources>
     <NavigationPage.TitleView>
-        <StackLayout Orientation="Horizontal" Spacing="150">
-            <Button x:Name="RulesForInput" Text="Как вводить?"  Clicked="RulesForInput_Clicked" />
-            <Button x:Name="SendTrackButton" Text="Отправить" VerticalOptions="End"  Clicked="SendTrackButton_Clicked"/>
+        <StackLayout Orientation="Horizontal" Spacing="40">
+            <Label Text="Добавление" TextColor="White" FontSize="Medium" VerticalOptions="CenterAndExpand"/>
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Button x:Name="RulesForInput" Text="Как вводить?" BackgroundColor="#4c99e8" TextColor="Wheat"  Clicked="RulesForInput_Clicked" />
+                <Button x:Name="SendTrackButton" Text="Отправить" BackgroundColor="#4c99e8"  TextColor="Wheat"  Clicked="SendTrackButton_Clicked"/>
+            </StackLayout>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
@@ -24,9 +27,9 @@
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="12*"/>
             </Grid.RowDefinitions>
-            <StackLayout Grid.Row="1">
-                <Label x:Name="TrackInputLabel" Grid.Row="0" Text="Хмм...кажется поле для ввода пусто." FontSize="Medium"  TextColor="Red" IsVisible="False"/>
-                <Entry x:Name="TrackInput" Grid.Row="1" FontSize="Large" Placeholder="Введите трек-код посылки" Completed="TrackInput_Completed" TextChanged="TrackInput_TextChanged"/>
+            <Label x:Name="TrackInputLabel" Grid.Row="0" VerticalOptions="CenterAndExpand" BackgroundColor="WhiteSmoke" Text="Хмм...кажется поле для ввода пусто." FontSize="Medium"  TextColor="Red" IsVisible="False"/>
+            <StackLayout Grid.Row="1" BackgroundColor="White">
+                <Entry x:Name="TrackInput" Grid.Row="1" FontSize="Large" Placeholder="Введите трек-код посылки" PlaceholderColor="Purple" Completed="TrackInput_Completed" TextChanged="TrackInput_TextChanged"/>
             </StackLayout>
             <Frame BorderColor="Black" Grid.Row="2">
                 <StackLayout Orientation="Horizontal" Grid.Row="2">

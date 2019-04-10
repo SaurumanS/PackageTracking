@@ -18,12 +18,10 @@ namespace PackageTracking
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddNewParcel : ContentPage
     {
-        Realm dataBase;
         bool checkOnSameSymbol = false;//Изменяется, когда был произведён ввод символа или вставка строки (чтобы обработчик не выполнялся дважды)
         public AddNewParcel()
         {
             InitializeComponent();
-            dataBase = Realm.GetInstance();
             ParcelDescriptionsBinding = new ObservableCollection<RussianPostClassLibrary.ParcelDescription>();
             TrackInput.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
             this.BindingContext = this;
@@ -99,6 +97,7 @@ namespace PackageTracking
 
         private void SendTrackButton_Clicked(object sender, EventArgs e)//Отправка трек-кода(ов) 
         {
+            SendTrackButton.IsEnabled = false;
             try
             {
                 RussianPostClassLibrary.ValidationCheck.TrackCodeCheck.CheckTrackCode(TrackInput.Text, true, false);
@@ -109,7 +108,7 @@ namespace PackageTracking
             {
                 DisplayAlert("Странные дела", exeption.Message, "Ой, ошибочка вышла");
             }
-
+            SendTrackButton.IsEnabled = true;
         }
         private async void GettingData()//Получение данных от веб-сервиса
         {
@@ -134,34 +133,19 @@ namespace PackageTracking
         }
         private bool CheckOnDuplicationTrackCodeInDataBase(string[] tracks)//Проверка на попытку повторно занести трек-код в базу данных
         {
-            bool result = true;
-            foreach(var track in tracks)
+            foreach (var item in tracks)
             {
-                if (dataBase.Find<DataBaseModel>(track) != null)
+                if (!OperationsWithDataBase.CheckOnDuplicationTrackCodeInDataBase(item))
                 {
-                    DisplayAlert("Дублирование", $"Посылка под номером: {track}, уже внесена в базу", "OK");
-                    result = false;
+                    DisplayAlert("Дублирование", $"Посылка под номером: {item}, уже внесена в базу", "OK");
+                    return false;
                 }
             }
-            return result;
+            return true;
         }
         private void TransfetData(RussianPostClassLibrary.ParcelDescription[] parcelsDescriptions)//Передаём данные в базу данных
         {
-            
-            dataBase.Write(() =>
-            {
-                foreach(var item in parcelsDescriptions)
-                {
-                    if (item.ProcessStatus)
-                    {
-                        var operations = dataBase.Add(item);
-                        operations.SenderInfo = dataBase.Add(item.SenderInfo);
-                        operations.RecipientInfo = dataBase.Add(item.RecipientInfo);
-                        var a = dataBase.Add(new DataBaseModel { Id = item.Barcode, Status = item.StatusParcel, ParcelDescription = operations, StatusParcelColor = item.StatusParcelColor });
-                    }
-                }
-            });
-            
+            OperationsWithDataBase.AddElementInDataBase(parcelsDescriptions);
         }
         private Task<RussianPostClassLibrary.ParcelDescription> ReturnDataAboutOneParcel(string barcode)//Асинхронный метод для заполнения массива из GettingData()
         {

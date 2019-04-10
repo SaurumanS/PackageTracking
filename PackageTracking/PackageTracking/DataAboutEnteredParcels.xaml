@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:PackageTracking"
              x:Class="PackageTracking.DataAboutEnteredParcels"
+             Icon="camera-icon (1).png"
              Title="Data">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Spacing="70">
             <Label Text="Ваши посылки" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand" TextColor="White" FontSize="Large"/>
-            <Button x:Name="DeleteOneTrack" Text="Как вводить?" HorizontalOptions="EndAndExpand"  />
+            <Button x:Name="UpdateDateAboutParcel" Text="Обновить" CornerRadius="50" BackgroundColor="#5ea0e5" TextColor="Wheat" HorizontalOptions="EndAndExpand" Clicked="UpdateDateAboutParcel_Clicked"/>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
@@ -16,13 +17,16 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Frame Grid.Row="0" Padding="20" HasShadow="False" HorizontalOptions="FillAndExpand" CornerRadius="5" OutlineColor="#890DC6" BackgroundColor="White">
-                <ListView x:Name="DataList" HasUnevenRows="True" SeparatorColor="#635ce8"  ItemTapped="DataList_ItemSelected" >
+                <ListView x:Name="DataList" HasUnevenRows="True" SeparatorColor="#635ce8"  ItemTapped="DataList_ItemSelected">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <local:CustomViewCell SelectedBackgroundColor="#96BCE3">
-                                <StackLayout>
-                                    <Label Text="{Binding Id}" FontSize="Large" />
-                                    <Label Text="{Binding Status}" FontSize="Medium" TextColor="{Binding StatusParcelColor}"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <StackLayout>
+                                        <Label Text="{Binding Id}" FontSize="Large" />
+                                        <Label Text="{Binding Status}" FontSize="Medium" TextColor="{Binding StatusParcelColor}"/>
+                                    </StackLayout>
+                                    <Button x:Name="DeleteOneParcelFromDataBase" Text="X"  FontSize="Large" BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand" Clicked="DeleteOneParcelFromDataBase_Clicked"/>
                                 </StackLayout>
                             </local:CustomViewCell>
                         </DataTemplate>

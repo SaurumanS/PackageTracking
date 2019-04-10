@@ -6,6 +6,7 @@
             android:TabbedPage.ToolbarPlacement="Bottom"
             android:TabbedPage.BarItemColor="Black"
             android:TabbedPage.BarSelectedItemColor="Red"
+            BackgroundColor="White"
              x:Class="PackageTracking.MainPage">
     <NavigationPage Title="Посылки" >
         <x:Arguments>
