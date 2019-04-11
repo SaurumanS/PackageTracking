@@ -45,17 +45,18 @@ namespace TestClassLibrary
             bool actual;
             Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("RN1234567899CN", true, false), Throws.TypeOf<ArgumentException>());
         }
-        [Test()]
-        public void ExeptionIncorrectRepresentationStringInternationalTrack1()
+        //[Test()]
+        //public void ExeptionIncorrectRepresentationStringInternationalTrack1()
+        //{
+        //    bool actual;
+        //    Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("QN123456789CN", true, false), Throws.TypeOf<ArgumentException>());
+        //}
+        [TestCase("QN123456789CN")]
+        [TestCase("RN1234Q6789CN")]
+        public void ExeptionIncorrectRepresentationStringInternationalTrack(string trackCode)
         {
             bool actual;
-            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("QN1234567899CN", true, false), Throws.TypeOf<ArgumentException>());
-        }
-        [Test()]
-        public void ExeptionIncorrectRepresentationStringInternationalTrack2()
-        {
-            bool actual;
-            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("RN1234Q67899CN", true, false), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode(trackCode, true, false), Throws.TypeOf<ArgumentException>());
         }
         [Test()]
         public void ExeptionIncorrectLengthStringLocalTrack()
@@ -67,13 +68,42 @@ namespace TestClassLibrary
         public void ExeptionIncorrectRepresentationStringLocalTrack()
         {
             bool actual;
-            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("123456F89012345", true, false), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("123456F8901234", true, false), Throws.TypeOf<ArgumentException>());
         }
         [Test()]
         public void ExeptionIncorrectSymbolInTrack()
         {
             bool actual;
             Assert.That(() => actual = TrackCodeCheck.CheckTrackCode("1=3456F8901234", true, false), Throws.TypeOf<ArgumentException>());
+        }
+        [TestCase("A",true)]
+        [TestCase("Z", true)]
+        [TestCase("G", true)]
+        [TestCase("0", true)]
+        [TestCase("5", true)]
+        [TestCase("9", true)]
+        [TestCase("+", true)]
+        [TestCase("|", true)]
+        public void CorrectOneSymbol(string symbol,bool expected)
+        {
+            bool actual = TrackCodeCheck.CheckTrackCode(symbol, false, false);
+            Assert.AreEqual(expected, actual);
+        }
+        [TestCase("/", false)]
+        [TestCase(":", false)]
+        [TestCase("@", false)]
+        [TestCase("[", false)]
+        public void IncorrectSymbol(string symbol, bool expected)
+        {
+            bool actual;
+            Assert.That(() => actual = TrackCodeCheck.CheckTrackCode(symbol, false, false), Throws.TypeOf<ArgumentException>());
+        }
+        [TestCase("RU123456789CN",true)]
+        [TestCase("12345678912345", true)]
+        public void NormalTrackCode(string trackCode, bool expected)
+        {
+            bool actual = TrackCodeCheck.CheckTrackCode(trackCode,true,false);
+            Assert.AreEqual(expected, actual);
         }
 
         
